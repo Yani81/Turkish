@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="bg" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adım · Турски за българи</title>
+<meta name="description" content="Курс по турски език за българи — от A1 до C1.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0E2233">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ДИЗАЙН ТОКЕНИ
+   --c-*  рамка на приложението (px)      --t-*  съдържание (rem)
+   ============================================================ */
+:root{
+  /* Палитра: İznik керамика — кобалт, тюркоаз, боле червено, порцелан */
+  --ink:#0E2233; --cobalt:#1F4E8C; --turquoise:#137C8B; --bole:#B3402F; --gold:#C8963E;
+  --paper:#F1F2EF; --card:#FFFFFF; --line:#DCDFD9;
+  --fg:#0E2233; --fg-2:#4A5A68; --fg-3:#7B8892;
+  --accent:var(--cobalt); --accent-2:var(--turquoise);
+  --ok:#1E7A4C; --ok-bg:#E4F3EA; --err:#B3402F; --err-bg:#FBE9E6;
+
+  /* Отстояния 4pt */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px;
+  --r-1:8px; --r-2:14px; --r-3:22px; --tap:44px;
+  --shadow:0 1px 2px rgba(14,34,51,.06), 0 8px 24px rgba(14,34,51,.06);
+  --motion:180ms cubic-bezier(.2,.7,.3,1);
+
+  /* Типография */
+  --f-display:"Unbounded",system-ui,sans-serif;
+  --f-body:"Onest",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,monospace;
+  --fs:1;                       /* контрол за размер на шрифта */
+  --t-xs:calc(.75rem*var(--fs)); --t-sm:calc(.875rem*var(--fs));
+  --t-md:calc(1rem*var(--fs));   --t-lg:calc(1.25rem*var(--fs));
+  --t-xl:calc(1.6rem*var(--fs)); --t-2xl:calc(2.1rem*var(--fs));
+  --c-nav:12px; --c-label:11px;
+}
+[data-theme="dark"]{
+  --paper:#0B1620; --card:#132330; --line:#24394A;
+  --fg:#E8EEF2; --fg-2:#A9BCC9; --fg-3:#7B8F9D;
+  --accent:#5B9BE0; --accent-2:#2FA6B8; --gold:#D9AE5B;
+  --ok:#5FD196; --ok-bg:#12332A; --err:#F08C7A; --err-bg:#3A1F1C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--fg); font-family:var(--f-body);
+  font-size:var(--t-md); line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(72px + env(safe-area-inset-bottom));
+}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px;border-radius:var(--r-1)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Рамка ---------- */
+.app{max-width:720px;margin:0 auto;padding:0 var(--s4)}
+.topbar{
+  position:sticky;top:0;z-index:20;background:var(--paper);
+  padding-top:calc(var(--s3) + env(safe-area-inset-top));
+  display:flex;align-items:center;gap:var(--s3);
+  border-bottom:1px solid transparent;transition:border-color var(--motion);
+}
+.topbar.scrolled{border-color:var(--line)}
+.brand{font-family:var(--f-display);font-weight:700;font-size:var(--t-lg);letter-spacing:-.02em}
+.brand .dot{color:var(--bole)}
+.topbar .spacer{flex:1}
+.iconbtn{
+  min-width:var(--tap);min-height:var(--tap);border:1px solid var(--line);background:var(--card);
+  border-radius:var(--r-2);display:grid;place-items:center;cursor:pointer;font-size:var(--c-nav);
+  transition:transform var(--motion);
+}
+.iconbtn:active{transform:scale(.94)}
+.back{display:inline-flex;align-items:center;gap:var(--s2);background:none;border:0;padding:var(--s2) 0;
+  color:var(--fg-2);font-size:var(--t-sm);cursor:pointer}
+
+/* ---------- Долна навигация ---------- */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
+  background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);
+}
+.tabbar a{
+  flex:1;min-height:var(--tap);padding:var(--s2) 0 var(--s3);text-decoration:none;color:var(--fg-3);
+  display:flex;flex-direction:column;align-items:center;gap:2px;font-size:var(--c-label);font-weight:500;
+}
+.tabbar a .ic{font-size:18px;line-height:1}
+.tabbar a[aria-current="page"]{color:var(--accent)}
+
+/* ---------- Подпис: суфиксна лента ---------- */
+.suffixline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--f-mono);font-size:var(--t-sm)}
+.chip{
+  padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+  animation:pop var(--motion) both;
+}
+.chip.root{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
+[data-theme="dark"] .chip.root{background:var(--accent);border-color:var(--accent);color:#08131C}
+.chip.suf{color:var(--turquoise);border-color:color-mix(in srgb,var(--turquoise) 40%,var(--line))}
+.chip.suf:nth-child(3){animation-delay:80ms} .chip.suf:nth-child(4){animation-delay:160ms}
+.plus{color:var(--fg-3)}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- Карти ---------- */
+.hero{padding:var(--s5) 0 var(--s4)}
+.hero h1{font-family:var(--f-display);font-size:var(--t-2xl);line-height:1.1;letter-spacing:-.03em;margin:0 0 var(--s3)}
+.lede{color:var(--fg-2);font-size:var(--t-sm);margin:0}
+.eyebrow{font-size:var(--c-label);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);font-weight:600}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-3);
+  padding:var(--s4);box-shadow:var(--shadow);margin-bottom:var(--s3);
+}
+.level{display:block;text-decoration:none;color:inherit;position:relative;overflow:hidden}
+.level .code{font-family:var(--f-display);font-size:var(--t-xl);letter-spacing:-.02em}
+.level .name{font-weight:600;margin-top:2px}
+.level .goal{color:var(--fg-2);font-size:var(--t-sm);margin-top:var(--s2)}
+.level .row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3)}
+.meter{height:6px;border-radius:999px;background:var(--line);margin-top:var(--s3);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px;transition:width var(--motion)}
+.pct{font-family:var(--f-mono);font-size:var(--t-xs);color:var(--fg-3)}
+
+.unit{display:flex;gap:var(--s3);align-items:center;padding:var(--s3) var(--s4);text-decoration:none;color:inherit;
+  border:1px solid var(--line);border-radius:var(--r-2);background:var(--card);margin-bottom:var(--s2)}
+.unit .no{font-family:var(--f-mono);font-weight:700;color:var(--fg-3);min-width:26px}
+.unit .t{flex:1}
+.unit .tr{display:block;color:var(--fg-3);font-size:var(--t-xs);font-family:var(--f-mono)}
+.unit .st{font-size:var(--t-sm)}
+.unit.done{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.unit.soon{opacity:.62}
+
+.tabs{display:flex;gap:var(--s1);overflow-x:auto;padding:var(--s2) 0 var(--s4);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  white-space:nowrap;padding:var(--s2) var(--s4);min-height:var(--tap);border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--card);font-size:var(--t-sm);font-weight:500;
+}
+.tabs button[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+[data-theme="dark"] .tabs button[aria-selected="true"]{background:var(--accent);color:#08131C;border-color:var(--accent)}
+
+h2.sec{font-family:var(--f-display);font-size:var(--t-lg);letter-spacing:-.02em;margin:var(--s5) 0 var(--s3)}
+h3.rule{margin:0 0 var(--s2);font-size:var(--t-md)}
+h3.rule .tr{display:block;font-family:var(--f-mono);font-size:var(--t-xs);color:var(--fg-3);font-weight:500}
+.ex{background:color-mix(in srgb,var(--accent) 7%,transparent);border-left:3px solid var(--accent-2);
+  padding:var(--s2) var(--s3);border-radius:0 var(--r-1) var(--r-1) 0;margin-top:var(--s2)}
+.ex b{font-family:var(--f-mono)}
+table.vocab{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+table.vocab td{padding:var(--s2) 0;border-bottom:1px solid var(--line);vertical-align:top}
+table.vocab td:first-child{font-family:var(--f-mono);font-weight:700;width:42%}
+.dlg{display:flex;flex-direction:column;gap:var(--s2)}
+.line{max-width:88%;padding:var(--s2) var(--s3);border-radius:var(--r-2);background:var(--card);border:1px solid var(--line)}
+.line.b{align-self:flex-end;background:color-mix(in srgb,var(--accent) 10%,var(--card))}
+.line .who{font-size:var(--c-label);color:var(--fg-3);text-transform:uppercase;letter-spacing:.1em}
+.line .tr{color:var(--fg-2);font-size:var(--t-sm)}
+
+/* ---------- Упражнения ---------- */
+.task{padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.q{margin:0 0 var(--s2)}
+.q .n{font-family:var(--f-mono);color:var(--fg-3);margin-right:var(--s2)}
+.ans{min-height:var(--tap);width:100%;max-width:340px;padding:var(--s2) var(--s3);
+  border:1px solid var(--line);border-radius:var(--r-2);background:var(--paper);font-family:var(--f-mono)}
+.ans.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.ans.err{border-color:var(--err);background:var(--err-bg);color:var(--err)}
+.opts{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.opts button{min-height:var(--tap);padding:var(--s2) var(--s4);border-radius:var(--r-2);border:1px solid var(--line);
+  background:var(--card);cursor:pointer}
+.opts button.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.opts button.err{border-color:var(--err);background:var(--err-bg);color:var(--err)}
+.keys{display:flex;gap:var(--s1);flex-wrap:wrap;margin-top:var(--s2)}
+.keys button{min-width:38px;min-height:38px;border:1px solid var(--line);background:var(--card);
+  border-radius:var(--r-1);font-family:var(--f-mono);cursor:pointer}
+.keys button:active{background:color-mix(in srgb,var(--accent) 15%,var(--card))}
+.hintline{font-size:var(--t-xs);color:var(--fg-3);margin-top:var(--s2)}
+.btn{min-height:var(--tap);padding:var(--s3) var(--s5);border-radius:var(--r-2);border:0;cursor:pointer;
+  background:var(--ink);color:#fff;font-weight:600}
+[data-theme="dark"] .btn{background:var(--accent);color:#08131C}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.actions{display:flex;gap:var(--s2);flex-wrap:wrap;margin-top:var(--s4)}
+.result{margin-top:var(--s3);font-weight:600}
+.result.pass{color:var(--ok)} .result.fail{color:var(--err)}
+.empty{color:var(--fg-2);font-size:var(--t-sm);border:1px dashed var(--line);border-radius:var(--r-2);padding:var(--s5);text-align:center}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.setrow:last-child{border-bottom:0}
+.seg{display:flex;border:1px solid var(--line);border-radius:var(--r-2);overflow:hidden}
+.seg button{min-height:var(--tap);padding:0 var(--s4);border:0;background:var(--card);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+[data-theme="dark"] .seg button[aria-pressed="true"]{background:var(--accent);color:#08131C}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:var(--s3) var(--s4);border-radius:var(--r-2);font-size:var(--t-sm);
+  z-index:40;box-shadow:var(--shadow)}
+</style>
+</head>
+<body>
+
+<header class="topbar app" id="topbar">
+  <span class="brand">Adım<span class="dot">.</span></span>
+  <span class="spacer"></span>
+  <button class="iconbtn" id="themeBtn" aria-label="Смяна на темата">◐</button>
+</header>
+
+<main class="app" id="view" aria-live="polite"></main>
+
+<nav class="tabbar" aria-label="Основна навигация">
+  <a href="#/" data-nav="/"><span class="ic">◈</span>Курс</a>
+  <a href="#/dict" data-nav="/dict"><span class="ic">≡</span>Речник</a>
+  <a href="#/settings" data-nav="/settings"><span class="ic">⚙</span>Настройки</a>
+</nav>
+
+<script>
+/* ============================================================
+   СЪДЪРЖАНИЕ — скелет по учебната програма A1–C1.
+   Всеки урок: {no, title, tr, suffix?, grammar[], vocab[], dialog[], drills[], test[]}
+   Готовите уроци имат body; останалите са планирани (soon).
+   ============================================================ */
+/* ============================================================
+   НИВА — кратки данни в обвивката. Уроците се зареждат от
+   content/<ниво>.js чак когато нивото се отвори.
+   ============================================================ */
+const LEVELS = [
+  {id:"a1",code:"A1",name:"Начално ниво",
+   goal:"Представяне, ежедневни разговори, ориентиране в магазин, ресторант и по улицата.",
+   units:[
+    {no:1,title:"Азбука и поздрави",tr:"Alfabe ve selamlaşma",ready:1},
+    {no:2,title:"Гласна хармония",tr:"Ünlü uyumu",ready:1},
+    {no:3,title:"Множествено число",tr:"Çokluk eki -lar/-ler",ready:1},
+    {no:4,title:"Bu, şu, o · Kim? Ne?",tr:"İşaret zamirleri",ready:1},
+    {no:5,title:"Лични местоимения и сказуемни окончания",tr:"Kişi zamirleri ve ek-fiil",ready:1},
+    {no:6,title:"Местен падеж -da/-de",tr:"Bulunma hâli",ready:1},
+    {no:7,title:"Изходен падеж -dan/-den",tr:"Ayrılma hâli",ready:1},
+    {no:8,title:"Дателен падеж -a/-e",tr:"Yönelme hâli",ready:1},
+    {no:9,title:"Сегашно продължително време -yor",tr:"Şimdiki zaman",ready:1},
+    {no:10,title:"Числата и цените",tr:"Sayılar ve fiyatlar",ready:1},
+    {no:11,title:"Обобщение на A1",tr:"A1 genel tekrar",ready:1}]},
+  {id:"a2",code:"A2",name:"Основно ниво",
+   goal:"Разказ за минали и бъдещи събития, предпочитания, възможност и желание.",
+   units:[
+    {no:1,title:"Минало свършено време -dı/-di",tr:"Görülen geçmiş zaman",ready:1},
+    {no:2,title:"Бъдеще време -acak/-ecek",tr:"Gelecek zaman",ready:1},
+    {no:3,title:"Винителен падеж -ı/-i",tr:"Belirtme hâli",ready:1},
+    {no:4,title:"Притежателни окончания",tr:"İyelik ekleri",ready:1},
+    {no:5,title:"Притежателни вериги",tr:"İsim tamlamaları",ready:1},
+    {no:6,title:"Възможност -ebil/-abil",tr:"Yeterlilik",ready:1},
+    {no:7,title:"Заповед и желание",tr:"Emir ve istek kipi",ready:1},
+    {no:8,title:"Пътуване и хотел",tr:"Seyahat ve otel",ready:1},
+    {no:9,title:"При лекаря",tr:"Doktorda"},
+    {no:10,title:"Празници и традиции",tr:"Bayramlar ve gelenekler"}]},
+  {id:"b1",code:"B1",name:"Средно ниво",
+   goal:"Самостоятелност при пътуване, изразяване на мнение, разказване на случки и аргументация.",
+   units:[
+    {no:1,title:"Чуто минало време -mış",tr:"Öğrenilen geçmiş zaman"},
+    {no:2,title:"Широко време -ar/-er/-r",tr:"Geniş zaman"},
+    {no:3,title:"Минало продължително -yordu",tr:"Şimdiki zamanın hikâyesi"},
+    {no:4,title:"Преди и след като",tr:"-madan önce / -dıktan sonra"},
+    {no:5,title:"Деепричастия -ınca, -ken, -arak",tr:"Zarf-fiiller"},
+    {no:6,title:"Задължителност -malı/-meli",tr:"Gereklilik kipi"},
+    {no:7,title:"Работа и автобиография",tr:"İş ve özgeçmiş"},
+    {no:8,title:"Наем на жилище",tr:"Ev kiralama"}]},
+  {id:"b2",code:"B2",name:"Средно напреднали",
+   goal:"Свободно общуване с носители, абстрактни теми, дебати и подробни текстове.",
+   units:[
+    {no:1,title:"Условно наклонение -sa/-se",tr:"Dilek-şart kipi"},
+    {no:2,title:"Непряка реч",tr:"Aktarma cümleleri"},
+    {no:3,title:"Страдателен и възвратен залог",tr:"Edilgen ve dönüşlü çatı"},
+    {no:4,title:"Причастия -dığı / -acağı",tr:"Sıfat-fiiller"},
+    {no:5,title:"Понудителен залог",tr:"Ettirgen fiiller"},
+    {no:6,title:"Околна среда и общество",tr:"Çevre ve toplum"},
+    {no:7,title:"Бизнес и преговори",tr:"İş görüşmeleri"}]},
+  {id:"c1",code:"C1",name:"Напреднали",
+   goal:"Идиоми, литература, академични текстове и тънкости в културата.",
+   units:[
+    {no:1,title:"Идиоми",tr:"Deyimler"},
+    {no:2,title:"Пословици",tr:"Atasözleri"},
+    {no:3,title:"Академичен стил",tr:"Akademik üslup"},
+    {no:4,title:"Ирония и хумор",tr:"İroni ve mizah"},
+    {no:5,title:"Литература и история",tr:"Edebiyat ve tarih"}]}
+];
+const LOADED = {};
+
+function loadLevel(id){
+  const g="LEVEL_"+id.toUpperCase();
+  if(LOADED[id]) return Promise.resolve(LOADED[id]);
+  if(window[g])  return Promise.resolve(LOADED[id]=window[g]);
+  return new Promise((res,rej)=>{
+    const sc=document.createElement("script");
+    sc.src="content/"+id+".js";
+    sc.onload=()=>window[g]?res(LOADED[id]=window[g]):rej(new Error("празен файл"));
+    sc.onerror=()=>rej(new Error("липсва content/"+id+".js"));
+    document.head.appendChild(sc);
+  });
+}
+
+/* ============================================================
+   СЪСТОЯНИЕ
+   ============================================================ */
+const KEY="adim.v1";
+const TRK=["ç","ğ","ı","İ","ö","ş","ü"];
+const S=Object.assign({theme:"light",fs:1,done:{},passed:{},last:null,tab:"gr",srs:{}},
+  JSON.parse(localStorage.getItem(KEY)||"{}"));
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const uid=(l,n)=>l+"-"+n;
+const norm=s=>s.toLowerCase().replace(/İ/g,"i").replace(/I/g,"ı").trim().replace(/\s+/g," ").replace(/[.!?]$/,"");
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const findLevel=id=>LOADED[id]||null;
+const meta=id=>LEVELS.find(l=>l.id===id);
+const progress=m=>{const t=m.units.length;
+  const d=Object.keys(S.done).filter(k=>k.startsWith(m.id+"-")).length;
+  return{d,t,p:t?Math.round(d/t*100):0}};
+const started=()=>LEVELS.filter(m=>m.units.some(u=>u.ready));
+const loading=t=>V.innerHTML=`<section class="hero"><p class="lede">${t}</p></section>`;
+
+function applyPrefs(){
+  document.documentElement.dataset.theme=S.theme;
+  document.documentElement.style.setProperty("--fs",S.fs);
+  document.querySelector('meta[name=theme-color]').content = S.theme==="dark"?"#0B1620":"#F1F2EF";
+}
+function toast(msg){
+  const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+
+/* ============================================================
+   ИЗГЛЕДИ
+   ============================================================ */
+const V=document.getElementById("view");
+
+function viewHome(){
+  const last=S.last?`<a class="card level" href="#/lesson/${S.last}"><span class="eyebrow">Продължи</span>
+     <div class="row"><div class="name">${esc(lessonTitle(S.last))}</div><span class="pct">→</span></div></a>`:"";
+  V.innerHTML=`
+  <section class="hero">
+    <div class="suffixline" aria-hidden="true">
+      <span class="chip root">adım</span><span class="plus">+</span>
+      <span class="chip suf">-lar</span><span class="plus">+</span>
+      <span class="chip suf">-la</span>
+      <span class="plus">=</span><span class="chip">adımlarla · със стъпки</span>
+    </div>
+    <h1>Турски език,<br>стъпка по стъпка</h1>
+    <p class="lede">Пет нива по учебната програма A1–C1. Всеки урок: правило, речник, диалог, упражнения и тест.</p>
+  </section>
+  ${last}
+  ${LEVELS.map(l=>{const p=progress(l);return `
+    <a class="card level" href="#/level/${l.id}">
+      <div class="row"><span class="code">${l.code}</span><span class="pct">${p.d}/${p.t} · ${p.p}%</span></div>
+      <div class="name">${l.name}</div>
+      <div class="goal">${esc(l.goal)}</div>
+      <div class="meter"><i style="width:${p.p}%"></i></div>
+    </a>`}).join("")}`;
+}
+
+function viewLevel(id){
+  const l=meta(id); if(!l) return viewHome();
+  V.innerHTML=`
+    <button class="back" onclick="go('/')">← Курс</button>
+    <section class="hero" style="padding-top:var(--s2)">
+      <span class="eyebrow">Ниво ${l.code}</span>
+      <h1>${l.name}</h1><p class="lede">${esc(l.goal)}</p>
+    </section>
+    ${l.units.map(u=>{
+      const key=uid(l.id,u.no), done=S.done[key];
+      const cls="unit"+(done?" done":"")+(u.ready?"":" soon");
+      const href=u.ready?`href="#/lesson/${key}"`:`href="#" data-soon="1"`;
+      return `<a class="${cls}" ${href}>
+        <span class="no">${String(u.no).padStart(2,"0")}</span>
+        <span class="t">${esc(u.title)}<span class="tr">${esc(u.tr)}</span></span>
+        <span class="st">${done?"✓":(u.ready?"›":"·")}</span></a>`}).join("")}
+    ${l.units.some(u=>u.ready)?"":'<p class="empty">Уроците за това ниво предстоят.</p>'}`;
+}
+
+function lessonRef(key){
+  const [lid,no]=key.split("-"); const l=findLevel(lid); if(!l) return null;
+  const u=l.units.find(x=>String(x.no)===no); return u?{l,u}:null;
+}
+const lessonTitle=key=>{
+  const [lid,no]=key.split("-"); const m=meta(lid); if(!m) return "Продължи";
+  const u=m.units.find(x=>String(x.no)===no);
+  return u?`${m.code} · ${u.title}`:`${m.code} · урок ${no}`;
+};
+
+function viewLesson(key){
+  const lid=key.split("-")[0];
+  if(!LOADED[lid]){
+    loading("Зареждане…");
+    return loadLevel(lid).then(()=>{ if(PATH==="/lesson/"+key) viewLesson(key); })
+                         .catch(()=>loading("Урокът не се зареди."));
+  }
+  const r=lessonRef(key); if(!r||!r.u.ready) return viewHome();
+  const {l,u}=r; S.last=key; save();
+  const tabs=[["gr","Граматика"]]
+    .concat(u.vocab?[["vo","Речник"]]:[], u.dialog?[["dl","Диалог"]]:[],
+            [["ex","Упражнения"],["ts","Тест"]]);
+  if(!tabs.some(t=>t[0]===S.tab)) S.tab="gr";
+  V.innerHTML=`
+    <button class="back" onclick="go('/level/${l.id}')">← ${l.code}</button>
+    <section class="hero" style="padding:var(--s3) 0 0">
+      <span class="eyebrow">Урок ${String(u.no).padStart(2,"0")} · ${l.code}</span>
+      <h1 style="font-size:var(--t-xl)">${esc(u.title)}</h1>
+      <p class="lede" style="font-family:var(--f-mono)">${esc(u.tr)}</p>
+    </section>
+    <div class="tabs" role="tablist">${tabs.map(([k,n])=>
+      `<button role="tab" data-tab="${k}" aria-selected="${S.tab===k}">${n}</button>`).join("")}</div>
+    <div id="pane"></div>`;
+  V.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{
+    S.tab=b.dataset.tab;save();
+    V.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-selected",x===b));
+    pane(u,key);
+  });
+  pane(u,key);
+}
+
+function pane(u,key){
+  const el=document.getElementById("pane");
+  if(S.tab==="gr") el.innerHTML=u.grammar.map(g=>`<div class="card">
+      <h3 class="rule">${g.h}<span class="tr">${esc(g.tr)}</span></h3>
+      <p style="margin:0;color:var(--fg-2)">${g.p}</p>
+      ${(g.ex||[]).map(e=>`<div class="ex">${e}</div>`).join("")}</div>`).join("");
+
+  if(S.tab==="vo"&&u.vocab) el.innerHTML=`<div class="card"><table class="vocab">${
+      u.vocab.map(w=>`<tr><td>${esc(w.tr)}</td><td>${esc(w.bg)}${
+        w.n?`<span class="pct"> · ${esc(w.n)}</span>`:""}</td></tr>`).join("")}</table></div>`;
+
+  if(S.tab==="dl"&&u.dialog) el.innerHTML=`<div class="dlg">${u.dialog.map((d,i)=>
+      `<div class="line ${d.b?"b":""}" data-say="${i}"><span class="who">${esc(d.who)}</span>
+       <div>${esc(d.tr)}</div><div class="tr">${esc(d.bg)}</div></div>`).join("")}</div>
+      <div class="actions"><button class="btn ghost" id="speak">▶ Прочети диалога</button></div>
+      <p class="hintline">Докоснете реплика, за да я чуете.</p>`;
+
+  if(S.tab==="ex") renderTasks(el,u.drills,key,false);
+  if(S.tab==="ts") renderTasks(el,u.test,key,true);
+
+  const sp=document.getElementById("speak");
+  if(sp) sp.onclick=()=>{
+    if(u.audio) return new Audio(u.audio).play().catch(()=>toast("Записът липсва"));
+    speak(u.dialog.map(d=>d.tr).join(". "));
+  };
+  el.querySelectorAll("[data-say]").forEach(n=>n.onclick=()=>{
+    const d=u.dialog[+n.dataset.say];
+    d.audio ? new Audio(d.audio).play().catch(()=>speak(d.tr)) : speak(d.tr);
+  });
+}
+
+/* ---------- Двигател за упражнения ---------- */
+function renderTasks(el,list,key,isTest){
+  el.innerHTML=`<div class="card">${list.map((t,i)=>`
+    <div class="task" data-i="${i}">
+      <p class="q"><span class="n">${i+1}.</span>${t.q}</p>
+      ${t.type==="choice"
+        ? `<div class="opts">${t.o.map((o,j)=>`<button data-o="${j}">${esc(o)}</button>`).join("")}</div>`
+        : `<input class="ans" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="${t.type==="match"?"напр. b,c,a":"отговор"}">
+           <div class="keys">${TRK.map(c=>`<button type="button" data-k="${c}">${c}</button>`).join("")}</div>`}
+    </div>`).join("")}</div>
+    <div class="actions">
+      <button class="btn" id="check">Провери</button>
+      <button class="btn ghost" id="reset">Изчисти</button>
+    </div>
+    <p class="result" id="res"></p>`;
+
+  /* Турските букви, които ги няма на българската клавиатура */
+  el.querySelectorAll(".keys button").forEach(b=>b.onclick=()=>{
+    const inp=b.closest(".task").querySelector(".ans");
+    const p=inp.selectionStart ?? inp.value.length;
+    inp.value=inp.value.slice(0,p)+b.dataset.k+inp.value.slice(inp.selectionEnd ?? p);
+    inp.focus(); inp.setSelectionRange(p+1,p+1);
+  });
+
+  el.querySelectorAll(".opts button").forEach(b=>b.onclick=()=>{
+    b.parentElement.querySelectorAll("button").forEach(x=>x.dataset.sel="");
+    b.dataset.sel="1"; b.style.borderColor="var(--accent)";
+  });
+
+  document.getElementById("reset").onclick=()=>renderTasks(el,list,key,isTest);
+  document.getElementById("check").onclick=()=>{
+    let ok=0;
+    el.querySelectorAll(".task").forEach(node=>{
+      const t=list[+node.dataset.i]; let good=false;
+      if(t.type==="choice"){
+        const btns=[...node.querySelectorAll("button")];
+        const sel=btns.findIndex(b=>b.dataset.sel==="1");
+        btns.forEach(b=>b.classList.remove("ok","err"));
+        if(sel>-1){ good = sel===t.a; btns[sel].classList.add(good?"ok":"err"); }
+        if(!good) btns[t.a].classList.add("ok");
+      }else{
+        const inp=node.querySelector(".ans");
+        good=t.a.some(a=>norm(a)===norm(inp.value));
+        inp.classList.toggle("ok",good); inp.classList.toggle("err",!good);
+        if(!good && !node.querySelector(".hintline"))
+          inp.insertAdjacentHTML("afterend",`<div class="hintline">Вярно: <b>${esc(t.a[0])}</b></div>`);
+      }
+      if(good) ok++;
+    });
+    const pct=Math.round(ok/list.length*100);
+    const res=document.getElementById("res");
+    const pass=pct>=70;
+    res.className="result "+(pass?"pass":"fail");
+    res.textContent=`${ok} от ${list.length} · ${pct}%` + (isTest?(pass?" · тестът е преминат":" · нужни са 70%"):"");
+    if(isTest&&pass){ S.passed[key]=pct; S.done[key]=true; seedSrs(key); save(); toast("Урокът е завършен ✓"); }
+  };
+}
+
+/* Интервални повторения: думите се засяват при преминат тест.
+   Ключ = турската дума. lvl = стъпало, due = кога е следващото повторение. */
+function seedSrs(key){
+  const r=lessonRef(key); if(!r) return;
+  (r.u.vocab||[]).forEach(w=>{
+    const k=norm(w.tr);
+    if(!S.srs[k]) S.srs[k]={lvl:0,due:Date.now(),src:key};
+  });
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)) return toast("Устройството не поддържа глас");
+  const u=new SpeechSynthesisUtterance(text); u.lang="tr-TR"; u.rate=.92;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function viewDict(){
+  const need=started().filter(m=>!LOADED[m.id]);
+  if(need.length){
+    loading("Зареждане на речника…");
+    return Promise.all(need.map(m=>loadLevel(m.id).catch(()=>{})))
+                  .then(()=>{ if(PATH==="/dict") viewDict(); });
+  }
+  const rows=[];
+  started().forEach(m=>{const l=LOADED[m.id]; if(!l) return;
+    l.units.forEach(u=>(u.vocab||[]).forEach(w=>rows.push({t:w.tr,b:w.bg,l:l.code,n:u.no})));});
+  rows.sort((a,b)=>a.t.localeCompare(b.t,"tr"));
+  V.innerHTML=`<section class="hero"><h1 style="font-size:var(--t-xl)">Речник</h1>
+      <p class="lede">Всички думи от завършените уроци, по азбучен ред.</p></section>
+    <div class="card"><input class="ans" id="q" placeholder="търсене…" style="max-width:100%;margin-bottom:var(--s3)">
+    <table class="vocab" id="tbl">${rows.map(r=>`<tr><td>${esc(r.t)}</td><td>${esc(r.b)}
+      <span class="pct"> · ${r.l}/${r.n}</span></td></tr>`).join("")||'<tr><td colspan=2>Още няма думи.</td></tr>'}</table></div>`;
+  const q=document.getElementById("q");
+  if(q) q.oninput=()=>{const v=norm(q.value);
+    document.querySelectorAll("#tbl tr").forEach(tr=>tr.style.display=norm(tr.textContent).includes(v)?"":"none")};
+}
+
+function viewSettings(){
+  V.innerHTML=`<section class="hero"><h1 style="font-size:var(--t-xl)">Настройки</h1></section>
+    <div class="card">
+      <div class="setrow"><span>Тема</span><div class="seg" id="theme">
+        <button data-v="light" aria-pressed="${S.theme==="light"}">Светла</button>
+        <button data-v="dark" aria-pressed="${S.theme==="dark"}">Тъмна</button></div></div>
+      <div class="setrow"><span>Размер на текста</span><div class="seg" id="fs">
+        <button data-v="0.9" aria-pressed="${S.fs==0.9}">A</button>
+        <button data-v="1" aria-pressed="${S.fs==1}">A</button>
+        <button data-v="1.15" aria-pressed="${S.fs==1.15}">A</button></div></div>
+      <div class="setrow"><span>Изтриване на прогреса</span>
+        <button class="btn ghost" id="wipe">Изчисти</button></div>
+    </div>
+    <p class="hintline">Adım · офлайн приложение. Добавете го на началния екран: Сподели → Към началния екран.</p>`;
+  document.querySelectorAll("#theme button").forEach(b=>b.onclick=()=>{S.theme=b.dataset.v;save();applyPrefs();viewSettings()});
+  document.querySelectorAll("#fs button").forEach(b=>b.onclick=()=>{S.fs=+b.dataset.v;save();applyPrefs();viewSettings()});
+  document.getElementById("wipe").onclick=()=>{
+    if(confirm("Да изтрия ли целия прогрес?")){S.done={};S.passed={};S.last=null;save();toast("Прогресът е изтрит")}};
+}
+
+/* ============================================================
+   РУТЕР
+   ============================================================ */
+let PATH = (location.hash.replace(/^#/,"") || "/");
+
+function go(p){
+  PATH = p || "/";
+  try{ history.pushState({p:PATH},"","#"+PATH); }catch(e){}
+  route();
+}
+
+function route(){
+  const [,seg,arg]=PATH.split("/");
+  if(seg==="level") viewLevel(arg);
+  else if(seg==="lesson") viewLesson(arg);
+  else if(seg==="dict") viewDict();
+  else if(seg==="settings") viewSettings();
+  else viewHome();
+  document.querySelectorAll(".tabbar a").forEach(a=>{
+    const on = (seg==="dict"||seg==="settings") ? a.dataset.nav==="/"+seg : a.dataset.nav==="/";
+    on?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current");
+  });
+  window.scrollTo(0,0);
+}
+
+/* Всички вътрешни връзки минават през go(). В sandbox рамка смяната на
+   location.hash се брои за навигация, затова адресът не се пипа директно. */
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[href^="#"]'); if(!a) return;
+  e.preventDefault(); e.stopPropagation();
+  if(a.dataset.soon) return toast("Урокът предстои");
+  go(a.getAttribute("href").slice(1));
+});
+
+addEventListener("popstate",()=>{ PATH=location.hash.replace(/^#/,"")||"/"; route(); });
+document.getElementById("themeBtn").onclick=()=>{S.theme=S.theme==="dark"?"light":"dark";save();applyPrefs()};
+addEventListener("scroll",()=>document.getElementById("topbar").classList.toggle("scrolled",scrollY>4));
+applyPrefs(); route();
+
+if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>

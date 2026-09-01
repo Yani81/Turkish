@@ -1,0 +1,17 @@
+{
+  "name": "Adım · Турски за българи",
+  "short_name": "Adım",
+  "description": "Курс по турски език за българи, нива A1–C1.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1F2EF",
+  "theme_color": "#0E2233",
+  "lang": "bg",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
