@@ -1,0 +1,18 @@
+{
+  "name": "Türkçe — Учебник и диалози",
+  "short_name": "Türkçe",
+  "description": "Интерактивен учебник по турски език за българи: граматика, упражнения с проверка, аудио диалози и картинен речник.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ECEFEA",
+  "theme_color": "#0E2338",
+  "lang": "bg",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
